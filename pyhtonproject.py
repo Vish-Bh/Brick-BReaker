@@ -1,7 +1,8 @@
 import pygame
 import random
 import math
-
+import numpy
+tickpersec=60
 count=0
 complete=False
 score=0
@@ -185,8 +186,6 @@ def panel6():
             obas = pygame.Rect(i, j, 15, 10)
             listo.append(obas)
 
-
-
 # MOUSE POSITION (281, 401)
 def load_level():
     global level, count
@@ -224,8 +223,6 @@ def load_level():
             level +=1
         
     
-
-
 while alive:
     # levelclear=False
     # print(pygame.mouse.get_pos())
@@ -274,7 +271,8 @@ while alive:
         score=0
         listo=[]
         count=0
-        level=1
+        level=0
+        levelclear= False
         load_level()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -282,8 +280,9 @@ while alive:
                 game_over = False 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    level -=1
+                    level =1
                     game_over = False
+                    levelclear= False
                     gameball = pygame.Rect(random.randint(int(width/3),int( width/3+100)), random.randint(int(height/2)+50, int(height/2+50+50) ), 15, 15)
                     speedx, speedy = 1, 2
         font1=pygame.font .Font(None, 40)
@@ -294,6 +293,7 @@ while alive:
         # print(level)
     
     while levelclear and not game_over:
+        if not game_over:
             screen.fill(blackcol)
             font2=pygame.font .Font(None, 40)
             if level==8:
@@ -311,7 +311,7 @@ while alive:
                             level=0
    
             else:
-                if level<8:
+                if level<8 and not game_over:
                     text = font2.render("Level Clear! Press space to Continue", True, goldcol)
                     text_rect = text.get_rect(center=(width / 2, 1.05 * height / 2))
                     screen.blit(text, text_rect)
@@ -330,6 +330,7 @@ while alive:
         load_level()
         keo = pygame.key.get_pressed()
         realball_center=gameball.center
+
         if keo[pygame.K_l]:
             gameball = pygame.Rect(random.randint(int(width/3),int( width/3+100)), random.randint(int(height/2)+50, int(height/2+50+50) ), 15, 15)
 
@@ -421,7 +422,7 @@ while alive:
         if gameball.y < 73 or gameball.y > height - gameball.height:
             speedy *= -1
 
-    clock.tick(60)
+    clock.tick(tickpersec)
     pygame.display.flip()
 
 pygame.quit()
